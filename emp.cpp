@@ -2,7 +2,7 @@
 
 using namespace std;
 
-string indent()
+inline string indent()
 {
     return "\t\t\t";
 }
@@ -10,16 +10,13 @@ string indent()
 class Employee;
 vector<Employee> employees;
 
-// int present = 0;
-
 struct Employee
 {
 public:
-    string id;
-    string name;
-    // int salary;
-    string contact;
+    string id,name,contact;
 };
+
+string name, pass;
 
 namespace loggin_{
 
@@ -27,7 +24,7 @@ namespace loggin_{
         system("CLS");
 
         cout << "\n\n"
-            << indent() << "Employee Managment System" << endl;
+            << indent() << "Employee Data Managment System" << endl;
         cout << "\n\n"
             << indent() << "Sign In" << endl;
         string a, b;
@@ -37,6 +34,13 @@ namespace loggin_{
         cout << "\n"
             << indent() << "Enter your password: ";
             cin >> b;
+            if (a != name or b != pass)
+            {
+                cout << "\n\n"
+                     << indent() << "\aUsername or Password is incorrect!";
+                _sleep(4000);
+                loggin_::login();
+            }
         }
 }
 
@@ -46,8 +50,12 @@ namespace emp{
         system("CLS");
         int add;
         cout << "\n\n"
-             << indent() << "Enter number of employees data you want to enter: ";
+             << indent() << "Enter number of employees data you want to insert: ";
         cin >> add;
+        if(add<1){
+            cout<<"\n\n"<<indent()<<"Invalid option!";
+            return;
+        }
         int g = employees.size();
         Employee e;
         for (int i = g; i < (g + add); i++)
@@ -60,10 +68,6 @@ namespace emp{
                  << indent() <<"Name : ";
             cin >>
                 e.name;
-            // cout<<"\n"<<indent()<<"Salary: ";
-            // cin>>e.salary;
-            // cout<<"\n"<<indent()<<"Address(city): ";
-            // cin>>e.address;
             cout<<"\n"<<indent()<<"Contact: ";
             cin>>e.contact; 
             employees.push_back(e);
@@ -98,93 +102,83 @@ namespace emp{
         vb[1 + max(employees[i].id.size(), attribute[0].size()) + 2] = true;
         vb[1 + max(employees[i].id.size(), attribute[0].size()) + 2 + 1 + max(employees[i].name.size(), attribute[1].size())+2] = true;
         vb[1 + max(employees[i].id.size(), attribute[0].size()) + 2 + 1 + max(employees[i].name.size(), attribute[1].size()) + 2 + 1 + max(employees[i].contact.size(),attribute[2].size()) + 2] = true;
-        int k = 0;
+        int column = 0;
         int count = 0;
         vector<string> record = {employees[i].id,employees[i].name,employees[i].contact};
-        int t = 0;
+        int row = 0;
         
-        // cout<<g<<endl;
-        // for(int i = 0;i<g;i++){
-        //     cout<<vb[i]<<" ";
-        // }
         cout<<endl;
         
-        while(t<5){
-            k = 0;
+        while(row<5){
+            column = 0;
             count = 0;
             bool ok = false;
             cout<<indent();
-            if(!(t&1)){
-                while(k<g){
+            if(!(row&1)){
+                while(column<g){
                     cout<<'-';
-                    k++;
+                    column++;
                 }
                 cout<<endl;
-                t++;
+                row++;
                 continue;
                 
             } 
-            else if(t == 1){
-                while (k < g)
+            else if(row == 1){
+                while (column < g)
                 {
-                    if (vb[k])
+                    if (vb[column])
                     {
                         cout << '|';
-                        // cout<<"."<<k<<".";
-                        k++;
+                        column++;
                     }
-                    else if ((vb[k - 1] == true and k > 0))
+                    else if ((vb[column - 1] == true and column > 0))
                     {
                         cout << ' ';
-                        // cout << "." << k << ".";
-                        k++;
+                        column++;
                         ok = true;
                     }
                     else if (ok)
                     {
                         cout << attribute[count];
-                        // cout << "." << k << ".";
-                        k += attribute[count].size();
+                        column += attribute[count].size();
                         count++;
                         ok = false;
                     }
                     else
                     {
                         cout << ' ';
-                        k++;
+                        column++;
                     }
                 }
                 cout<<endl;
-                t++;
+                row++;
                 continue;
             }
            
-            while(k<g){
-                if(vb[k]){
+            while(column<g){
+                if(vb[column]){
                     cout<<'|';
-                    // cout<<"."<<k<<".";
-                    k++;
+                    column++;
                 }
-                else if((vb[k-1] == true and k>0)){
+                else if((vb[column-1] == true and column>0)){
                     cout<<' ';
-                    // cout << "." << k << ".";
-                    k++;
+                    column++;
                     ok = true;
                 }
                 else if(ok){
                     cout<<record[count];
-                    // cout << "." << k << ".";
-                    k+=record[count].size();
+                    column+=record[count].size();
                     count++;
                     ok = false;
                 }
                 else{
                     cout<<' ';
-                    k++;
+                    column++;
                 }
             }
             cout<<endl;
-            t++;
+            row++;
         }
     }
 
@@ -215,90 +209,84 @@ namespace emp{
         b = max(b,4);
         c = max(c,7);
         int g = 10+a+b+c;
-        int t = 0;
+        int row = 0;
         vector<bool> vb(g);
         vb[0] = true;
         vb[1 + a + 2] = true;
         vb[1 +a + 2 + 1 + b + 2] = true;
         vb[1 + a + 2 + 1 + b + 2 + 1 + c + 2] = true;
-        int k=0;
+        int column=0;
         int count = 0;
         int y = 0;
         vector<string> record;
-        while(t<2*employees.size()+3){
-            k = 0;
+        while(row<2*employees.size()+3){
+            column = 0;
             count = 0;
             bool ok = false;
             cout << indent();
-            if (!(t & 1))
+            if (!(row & 1))
             {
-                while (k < g)
+                while (column < g)
                 {
                     cout << '-';
-                    k++;
+                    column++;
                 }
                 cout << endl;
-                t++;
+                row++;
                 continue;
             }
-            else if (t == 1)
+            else if (row == 1)
             {
-                while (k < g)
+                while (column < g)
                 {
-                    if (vb[k])
+                    if (vb[column])
                     {
                         cout << '|';
-                        // cout<<"."<<k<<".";
-                        k++;
+                        column++;
                     }
-                    else if ((vb[k - 1] == true and k > 0))
+                    else if ((vb[column - 1] == true and column > 0))
                     {
                         cout << ' ';
-                        // cout << "." << k << ".";
-                        k++;
+                        column++;
                         ok = true;
                     }
                     else if (ok)
                     {
                         cout << attribute[count];
-                        // cout << "." << k << ".";
-                        k += attribute[count].size();
+                        column += attribute[count].size();
                         count++;
                         ok = false;
                     }
                     else
                     {
                         cout << ' ';
-                        k++;
+                        column++;
                     }
                 }
                 cout << endl;
-                t++;
+                row++;
                 continue;
             }
             
             record = {employees[y].id, employees[y].name, employees[y].contact};
-            while (k < g)
+            while (column < g)
             {
-                if (vb[k])
+                if (vb[column])
                 {
                     cout << '|';
-                    // cout<<"."<<k<<".";
-                    k++;
+                    column++;
                 }
-                else if ((vb[k - 1] == true and k > 0))
+                else if ((vb[column - 1] == true and column > 0))
                 {
                     cout << ' ';
-                    // cout << "." << k << ".";
-                    k++;
+                    column++;
                     ok = true;
                 }
                 else if (ok)
                 {
                     
                     cout << record[count];
-                    // cout << "." << k << ".";
-                    k += record[count].size();
+                    column += record[count].size();
                     count++;
                     
                     ok = false;
@@ -306,18 +294,24 @@ namespace emp{
                 else
                 {
                     cout << ' ';
-                    k++;
+                    column++;
                 }
 
                 
             }
             y++;
             cout << endl;
-            t++;
+            row++;
         }
     }
 
     void update(){
+        if (employees.empty())
+        {
+            cout << "\n\n"
+                 << indent() << "Record is empty!";
+            return;
+        }
         cout<<"\n\n"<<indent()<<"Enter the Id of the employee: ";
         string a;
         cin>>a;
@@ -359,6 +353,10 @@ namespace emp{
     }
 
     void delete_(){
+        if(employees.empty()){
+            cout<<"\n\n"<<indent()<<"Record is empty!";
+            return;
+        }
         cout << "\n\n"
              << indent() << "Enter the Id of the employee: ";
         string a;
@@ -407,10 +405,9 @@ signed main()
 {
     system("CLS");
     cout << "\n\n"
-         << indent() << "Employee Managment System" << endl;
+         << indent() << "Employee Data Managment System" << endl;
     cout << "\n\n"
          << indent() << "Sign Up" << endl;
-    string name, pass;
     cout << "\n"
          << indent() << "Enter your username: ";
     cin >> name;
@@ -420,7 +417,7 @@ signed main()
     cout << "\n\n"
          << indent() << "Please wait!";
 
-    for (int i = 0; i < 7; i++)
+    for (int i = 0; i < 6; i++)
     {
         cout << '.';
         _sleep(1000);
@@ -429,7 +426,7 @@ signed main()
     system("CLS");
     
     cout << "\n\n"
-         << indent() << "Employee Managment System" << endl;
+         << indent() << "Employee Data Managment System" << endl;
     cout << "\n\n"
          << indent() << "Sign In" << endl;
     string a, b;
@@ -443,14 +440,15 @@ signed main()
     if(a!=name or b!=pass){
         cout<<"\n\n"<<indent()<<"\aUsername or Password is incorrect!";
         _sleep(4000);
-        loggin_::login;
+        loggin_::login();
     }
     system("CLS");
     int g;
     while(true){
+        cout<<"\n\n";
         cout<<"\n"<<indent()<<"Press 1 to insert the data";
-        cout<<"\n"<<indent()<<"Press 2 to show the record";
-        cout<<"\n"<<indent()<<"Press 3 to show the data of all the employees";
+        cout<<"\n"<<indent()<<"Press 2 to see the data of a perticular employee";
+        cout<<"\n"<<indent()<<"Press 3 to see the data of all the employees";
         cout<<"\n"<<indent()<<"Press 4 to delete the existing record";
         cout<<"\n"<<indent()<<"Press 5 to update the existing record";
         cout<<"\n"<<indent()<<"Press 6 to signout";
@@ -475,6 +473,7 @@ signed main()
                 break;
             case 6:
                 emp::logout();
+                system("CLS");
                 break;
             case 7:
                 exit(0);
